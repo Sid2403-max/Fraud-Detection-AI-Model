@@ -1,1 +1,25 @@
-https://github.com/Sid2403-max/Fraud-Detection-AI-Model
+🛠️ The Fix: Create a requirements.txt File
+You need to add a configuration file to your GitHub repository so Streamlit knows what dependencies to install before starting your app.
+
+Step 1: Create the File Locally
+In the root directory of your project folder (the exact same folder where your app.py and .pkl files live), create a new plain text file and name it exactly:
+requirements.txt
+
+Step 2: Add Your Dependencies
+Open the requirements.txt file and paste the following libraries into it:
+
+Plaintext
+streamlit
+pandas
+numpy
+scikit-learn
+joblib
+(If you used xgboost or matplotlib/seaborn anywhere in your script, add them on new lines in this file as well).
+
+Step 3: Push Changes to GitHub
+Commit and push this new requirements.txt file straight to your GitHub repository:
+
+Bash
+git add requirements.txt
+git commit -m "Add requirements.txt for deployment"
+git push origin main
