@@ -1,25 +1,57 @@
-🛠️ The Fix: Create a requirements.txt File
-You need to add a configuration file to your GitHub repository so Streamlit knows what dependencies to install before starting your app.
+🛠️ The Implementation Strategy: Static Localization Dictionary
+Since your app text is fixed (titles, quiz scenarios, risk alerts), the fastest and most efficient way to do this in Streamlit is using a Localization Dictionary. You don't need heavy external translation libraries like Google Translate API (which require paid API keys and cause network delays).
 
-Step 1: Create the File Locally
-In the root directory of your project folder (the exact same folder where your app.py and .pkl files live), create a new plain text file and name it exactly:
-requirements.txt
+Step 1: Create a Language Selector Sidebar
+Add a simple dropdown at the top of your app.py script so users can toggle their preferred language:
 
-Step 2: Add Your Dependencies
-Open the requirements.txt file and paste the following libraries into it:
+Python
+# Place this at the very top of app.py, right after page configuration
+language = st.sidebar.selectbox("🌐 Choose Language / भाषा चुनें", ["English", "Hindi (हिंदी)"])
+Step 2: Define the Translation Dictionary
+Create a structured dictionary holding your UI strings for both English and Hindi. Paste this right below your language selector:
 
-Plaintext
-streamlit
-pandas
-numpy
-scikit-learn
-joblib
-(If you used xgboost or matplotlib/seaborn anywhere in your script, add them on new lines in this file as well).
+Python
+# Content Dictionary mapping English keys to Hindi translations
+text_db = {
+    "English": {
+        "title": "🛡️ UPIShield: UPI Fraud Awareness Portal",
+        "subtitle": "Simulate a Mobile/UPI Transaction to assess risk in real-time.",
+        "tx_type": "Select Transaction Type:",
+        "amount": "Transaction Amount (in ₹):",
+        "balance": "Your Current Account Balance (in ₹):",
+        "scan_btn": "Scan Transaction Risk",
+        "insufficient": "🚨 Transaction Blocked: Insufficient Balance!",
+        "low_risk": "🟢 Low Risk Level",
+        "mod_risk": "🟡 Moderate Risk Level",
+        "high_risk": "🔴 High Risk Level",
+    },
+    "Hindi (हिंदी)": {
+        "title": "🛡️ UPIShield: यूपीआई धोखाधड़ी जागरूकता पोर्टल",
+        "subtitle": "वास्तविक समय में जोखिम का आकलन करने के लिए एक मोबाइल/यूपीआई लेनदेन का अनुकरण करें।",
+        "tx_type": "लेनदेन का प्रकार चुनें:",
+        "amount": "लेनदेन की राशि (₹ में):",
+        "balance": "आपका वर्तमान बैंक बैलेंस (₹ में):",
+        "scan_btn": "लेनदेन जोखिम की जांच करें",
+        "insufficient": "🚨 लेनदेन अवरुद्ध: अपर्याप्त बैंक बैलेंस!",
+        "low_risk": "🟢 कम जोखिम स्तर",
+        "mod_risk": "🟡 मध्यम जोखिम स्तर",
+        "high_risk": "🔴 उच्च जोखिम स्तर",
+    }
+}
 
-Step 3: Push Changes to GitHub
-Commit and push this new requirements.txt file straight to your GitHub repository:
+# Fetch the active language dictionary based on user selection
+lang_set = text_db[language]
+Step 3: Replace Hardcoded Strings with Dictionary Keys
+Now, update your UI elements to use the lang_set keys instead of raw text. For example:
 
-Bash
-git add requirements.txt
-git commit -m "Add requirements.txt for deployment"
-git push origin main
+Old Code: st.title("🛡️ UPIShield: UPI Fraud Awareness Portal")
+
+New Code: st.title(lang_set["title"])
+
+Old Code: amount = st.number_input("Transaction Amount (in ₹):", ...)
+
+New Code: amount = st.number_input(lang_set["amount"], ...)
+
+Old Code: if st.button("Scan Transaction Risk"):
+
+New Code: if st.button(lang_set["scan_btn"]):
